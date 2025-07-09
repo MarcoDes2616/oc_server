@@ -6,6 +6,7 @@ const OperationTypes = require("../models/OperationType");
 const SignalStatus = require("../models/SignalStatus");
 // const Users = require("../models/Users");
 const initModels = require('../models');
+const Users = require("../models/Users");
 
 const role = [{ role_name: "Admin" }, { role_name: "usuario" }];
 
@@ -51,17 +52,65 @@ const signalStatus = [
   { signal_status_name: "Unconfirmed" },
 ]
 
-// const users = [
-//   {
-//     name: "Marco",
-//     lastname: "Cardenas",
-//     email: "marco2616@gmail.com",
-//     birthday: "1983-04-05",
-//     documentNumber: "16261755",
-//     signDeclare: true,
-//     roleId: 1,
-//   },
-// ];
+const usersData = [
+  {
+    firstname: "Marco",
+    lastname: "Cardenas",
+    username: "marcoc",
+    email: "marco2616@gmail.com",
+    role_id: 1,
+    sign_declare: true,
+    password: "hashedpassword1",
+    reset_code: null,
+    password_change_at: null,
+    created_at: new Date("2025-01-15T10:00:00Z"),
+    status: true,
+    telegram_user: "Mrk_als",
+  },
+  {
+    firstname: "Ana",
+    lastname: "Gómez",
+    username: "anag",
+    email: "ana.gomez@example.com",
+    role_id: 2,
+    sign_declare: false,
+    password: "hashedpassword2",
+    reset_code: "ABC123",
+    password_change_at: new Date("2025-06-01T14:30:00Z"),
+    created_at: new Date("2025-03-20T08:15:00Z"),
+    status: true,
+    telegram_user: null,
+  },
+  {
+    firstname: "Carlos",
+    lastname: "Ramírez",
+    username: "carlr",
+    email: "carlos.ramirez@example.com",
+    role_id: 2,
+    sign_declare: true,
+    password: "hashedpassword3",
+    reset_code: null,
+    password_change_at: null,
+    created_at: new Date("2025-05-10T12:00:00Z"),
+    status: false,
+    telegram_user: "carlos_telegram",
+  },
+  {
+    firstname: "Laura",
+    lastname: "Martínez",
+    username: "lauram",
+    email: "laura.martinez@example.com",
+    role_id: 2,
+    sign_declare: true,
+    password: "hashedpassword4",
+    reset_code: "XYZ789",
+    password_change_at: new Date("2025-07-01T09:45:00Z"),
+    created_at: new Date("2025-04-25T16:20:00Z"),
+    status: true,
+    telegram_user: null,
+  },
+];
+
 
 
 async function seedCreate() {
@@ -70,7 +119,7 @@ async function seedCreate() {
   await Markets.bulkCreate(markets);
   await OperationTypes.bulkCreate(operationsTypes);
   await SignalStatus.bulkCreate(signalStatus);
-  // await Users.bulkCreate(users);
+  await Users.bulkCreate(usersData);
 }
 
 // agregar force: true a la configuración de Sequelize
