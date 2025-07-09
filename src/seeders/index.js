@@ -10,7 +10,14 @@ const Users = require("../models/Users");
 
 const role = [{ role_name: "Admin" }, { role_name: "usuario" }];
 
-const instruments = [{instrument_name: "V10"}, {instrument_name: "V25"}, {instrument_name: "V75"}, {instrument_name: "V50"}, {instrument_name: "STEP"}, {instrument_name: "V100"}]
+const instruments = [
+  {instrument_name: "V10"}, 
+  {instrument_name: "V25"}, 
+  {instrument_name: "V75"}, 
+  {instrument_name: "V50"}, 
+  {instrument_name: "STEP"}, 
+  {instrument_name: "V100"}
+]
 
 const markets = [
   { market_name: "Forex" },
@@ -111,8 +118,6 @@ const usersData = [
   },
 ];
 
-
-
 async function seedCreate() {
   await Roles.bulkCreate(role);
   await Instruments.bulkCreate(instruments);
@@ -122,7 +127,7 @@ async function seedCreate() {
   await Users.bulkCreate(usersData);
 }
 
-// agregar force: true a la configuración de Sequelize
+
 initModels()
 sequelize
   .sync({ force: true })
