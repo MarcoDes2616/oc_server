@@ -9,7 +9,7 @@ const Signals = sequelize.define(
       allowNull: false,
     },
     instrument_id: {
-      type: DataTypes.STRING,
+      type: DataTypes.INTEGER,
       allowNull: false,
     },
     operation_type_id: {
