@@ -17,6 +17,7 @@ const sendAuthTokenController = async (req, res) => {
         const user = await Users.findOne({ 
             where: { 
                 email,
+                status: true,
             } 
         });
 

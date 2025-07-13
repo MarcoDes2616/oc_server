@@ -12,32 +12,19 @@ const Users = sequelize.define(
       type: DataTypes.STRING,
       allowNull: false,
     },
-    username: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      unique: true,
-    },
     email: {
       type: DataTypes.STRING,
-      allowNull: false,
-    },
-    role_id: {
-      type: DataTypes.INTEGER,
       allowNull: false,
     },
     sign_declare: {
       type: DataTypes.BOOLEAN,
       allowNull: false,
     },
-    password: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-    reset_code: {
-      type: DataTypes.STRING,
+    login_token: {
+      type: DataTypes.STRING(12),
       allowNull: true,
     },
-    password_change_at: {
+    token_expires: {
       type: DataTypes.DATE,
       allowNull: true,
     },
@@ -53,6 +40,10 @@ const Users = sequelize.define(
       type: DataTypes.STRING,
       allowNull: true,
     },
+     last_login: {
+      type: DataTypes.DATE,
+      allowNull: true,
+    }
   },
   {
     timestamps: false,
