@@ -4,7 +4,6 @@ const Instruments = require("../models/Instruments");
 const Markets = require("../models/Markets");
 const OperationTypes = require("../models/OperationType");
 const SignalStatus = require("../models/SignalStatus");
-// const Users = require("../models/Users");
 const initModels = require('../models');
 const Users = require("../models/Users");
 
@@ -67,9 +66,6 @@ const usersData = [
     email: "marco2616@gmail.com",
     role_id: 1,
     sign_declare: true,
-    password: "hashedpassword1",
-    reset_code: null,
-    password_change_at: null,
     created_at: new Date("2025-01-15T10:00:00Z"),
     status: true,
     telegram_user: "Mrk_als",
@@ -80,9 +76,6 @@ const usersData = [
     username: "anag",
     email: "ana.gomez@example.com",
     role_id: 2,
-    sign_declare: false,
-    password: "hashedpassword2",
-    reset_code: "ABC123",
     password_change_at: new Date("2025-06-01T14:30:00Z"),
     created_at: new Date("2025-03-20T08:15:00Z"),
     status: true,
@@ -95,9 +88,6 @@ const usersData = [
     email: "carlos.ramirez@example.com",
     role_id: 2,
     sign_declare: true,
-    password: "hashedpassword3",
-    reset_code: null,
-    password_change_at: null,
     created_at: new Date("2025-05-10T12:00:00Z"),
     status: false,
     telegram_user: "carlos_telegram",
