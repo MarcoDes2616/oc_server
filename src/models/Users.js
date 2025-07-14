@@ -19,6 +19,7 @@ const Users = sequelize.define(
     sign_declare: {
       type: DataTypes.BOOLEAN,
       allowNull: false,
+      defaultValue: false,
     },
     login_token: {
       type: DataTypes.STRING(12),

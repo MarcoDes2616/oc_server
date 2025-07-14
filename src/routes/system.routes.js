@@ -1,4 +1,4 @@
-const { login} = require('../controllers/system.controller');
+const { login, sendAuthTokenController} = require('../controllers/system.controller');
 const express = require('express');
 const verifyJWT = require('../middlewares/auth.middleware');
 const isAdmin = require('../middlewares/isAdmin.middleware');
@@ -7,6 +7,9 @@ const systemRouter = express.Router();
 
 systemRouter.route("/login")
     .post(login)
+
+systemRouter.route("/request_auth_token")
+    .post(sendAuthTokenController)
 
 // systemRouter.route("/me")
 //     .get(verifyJWT, getMe)
