@@ -25,6 +25,10 @@ const Users = sequelize.define(
       type: DataTypes.STRING(12),
       allowNull: true,
     },
+    token_expires: {
+      type: DataTypes.DATE,
+      allowNull: true,
+    },
     created_at: {
       type: DataTypes.DATE,
       allowNull: false,
