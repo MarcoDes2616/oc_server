@@ -8,6 +8,7 @@ const SignalStatus = require("./SignalStatus");
 const OperationalBooks = require("./OperationalBooks");
 const Instruments = require("./Instruments");
 const { InstrumentTarget, UserProyect, SignalTaken } = require("./IntermediateModels");
+const AccountDetail = require("./AccountDetail");
 
 const initModels = () => {
   // Role 1 ----- * Users
@@ -77,6 +78,11 @@ const initModels = () => {
   // Instrument 1 ----- * Signals
   Instruments.hasMany(Signals, { foreignKey: "instrument_id" });
   Signals.belongsTo(Instruments, { foreignKey: "instrument_id" });
+  
+  // Users 1 ----- * AccountDetail
+  Users.hasMany(AccountDetail, { foreignKey: "user_id" });
+  AccountDetail.belongsTo(Users, { foreignKey: "user_id" });
+
 };
 
 module.exports = initModels;
