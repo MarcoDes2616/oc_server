@@ -65,12 +65,11 @@ const login = catchError(async (req, res) => {
   const { email, login_token } = req.body;
 
   try {
-    // 1. Buscar usuario con token válido
     const user = await Users.findOne({
       where: {
         email,
         login_token,
-        token_expires: { [Op.gt]: new Date() },
+        token_expires: { [Op.gt]: new Date() }, // Token aún válido
         status: true,
       },
     });
@@ -86,10 +85,12 @@ const login = catchError(async (req, res) => {
       expiresIn: process.env.TOKEN_EXPIRES_IN,
     });
 
+    const newTokenExpires = new Date();
+    newTokenExpires.setDate(newTokenExpires.getDate() + 7);
+
     await user.update({
       last_login: new Date(),
-      login_token: null,
-      token_expires: null,
+      token_expires: newTokenExpires,
     });
 
     const userData = {
@@ -120,10 +121,21 @@ const getMe = catchError(async (req, res) => {
   const { id } = req.user;
   const sessionAge = req.iat;
   const user = await Users.findByPk(id);
-  if (user.passwordChangeAt > sessionAge || !user.status)
+  if (user.passwordChangeAt > sessionAge || !user.status) {
     return res.status(401).json({ message: "Unauthorized" });
-  res.json({ success: true, user });
+  }
+
+  await user.update({
+    login_token: null,
+    token_expires: null,
+  });
+
+  res.json({
+    success: true,
+    user,
+  });
 });
+
 
 const verifyAdmin = async (req, res) => {
   const authHeader = req.headers.authorization || req.headers.Authorization;
