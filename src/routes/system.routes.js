@@ -1,4 +1,4 @@
-const { login, sendAuthTokenController, getMe, savePushToken} = require('../controllers/system.controller');
+const { login, sendAuthTokenController, getMe, savePushToken, sendCustomNotification} = require('../controllers/system.controller');
 const express = require('express');
 const verifyJWT = require('../middlewares/auth.middleware');
 const isAdmin = require('../middlewares/isAdmin.middleware');
@@ -16,6 +16,9 @@ systemRouter.route("/me")
 
 systemRouter.route("/save-push-token")
     .post(savePushToken)
+
+systemRouter.route("/send-custom-notification")
+    .post(sendCustomNotification)   
 
 // systemRouter.route("/update_password")
 //     .post(updatePassword)
