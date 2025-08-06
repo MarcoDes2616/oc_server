@@ -6,8 +6,6 @@ require("dotenv").config();
 const crypto = require("crypto");
 const { Op } = require("sequelize");
 const { sendPushNotification } = require("../utils/notificationService");
-// const { guardarFormulario, obtenerRegistros } = require("../utils/firebase");
-// const { welcomeEmail } = require("../utils/welcomeEmail");
 
 //ENDPOINT SYSTEM 1 -- REQUEST EMAIL TOKEN
 const sendAuthTokenController = async (req, res) => {
