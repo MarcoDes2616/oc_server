@@ -14,11 +14,10 @@ async function sendPushNotification(pushToken, title, body, data = {}) {
     sound: "default",
     title,
     body,
-    data, // Datos adicionales (opcional)
+    data,
   };
 
   try {
-    // Enviar la notificación
     const ticket = await expo.sendPushNotificationsAsync([message]);
     console.log("Notificación enviada:", ticket);
     return ticket;

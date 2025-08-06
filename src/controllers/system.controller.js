@@ -40,7 +40,7 @@ const sendAuthTokenController = async (req, res) => {
                         <strong style="font-size: 24px; letter-spacing: 3px; color: #000; font-weight: bold;">${token}</strong>
                     </div>
                     
-                    <p>Este código es válido por <strong>30 minutos</strong>.</p>
+                    <p>Este código es válido por <strong>30 minutos</strong> para su primer uso. Podrás continuar usandolo luego.</p>
                     <p style="font-size: 12px; color: #777;">Si no solicitaste este token, por favor ignora este mensaje.</p>
                 </div>
             `,
@@ -68,7 +68,7 @@ const login = catchError(async (req, res) => {
       where: {
         email,
         login_token,
-        token_expires: { [Op.gt]: new Date() }, // Token aún válido
+        token_expires: { [Op.gt]: new Date() },
         status: true,
       },
     });
@@ -143,12 +143,12 @@ const verifyAdmin = async (req, res) => {
   const { user } = jwt.verify(token, process.env.TOKEN_SECRET);
   if (user.roleId !== 1 || !user.status) {
     const resu = await Users.update(
-      {status: false},
-      { where: {id: user.id}, returning: true }
-  )
+      { status: false },
+      { where: { id: user.id }, returning: true }
+    );
     return res.status(401).json({ message: "Unauthorized" });
   }
-  return res.status(200)
+  return res.status(200);
 };
 
 // ENDPOINT SYSTEM 5 --- SAVE TOKEN FOR PUSH NOTIFICATIONS
@@ -172,10 +172,22 @@ const savePushToken = async (req, res) => {
 };
 
 // ENDPOINT SYSTEM 6 --- SEND CUSTOM NOTIFICATION
-const sendCustomNotification = async (req, res) => { 
+const sendCustomNotification = async (req, res) => {
   try {
     const { title, message, data } = req.body;
-    const allUsers = await Users.findAll();
+    const allUsers = await Users.findAll({
+      where: {
+        status: true,
+        pushToken: {
+          [Op.ne]: null,
+        },
+      },
+    });
+    console.log(
+      "Enviando notificaciones a todos los usuarios:",
+      allUsers.length
+    );
+
     const notifications = allUsers.map(async (user) => {
       if (user.pushToken) {
         await sendPushNotification(user.pushToken, title, message, data);
@@ -195,5 +207,5 @@ module.exports = {
   getMe,
   verifyAdmin,
   savePushToken,
-  sendCustomNotification
+  sendCustomNotification,
 };
