@@ -5,10 +5,11 @@ const sendEmail = require("../utils/sendMail");
 require("dotenv").config();
 const crypto = require("crypto");
 const { Op } = require("sequelize");
+const { sendPushNotification } = require("../utils/notificationService");
 // const { guardarFormulario, obtenerRegistros } = require("../utils/firebase");
 // const { welcomeEmail } = require("../utils/welcomeEmail");
 
-//REQUEST EMAIL TOKEN
+//ENDPOINT SYSTEM 1 -- REQUEST EMAIL TOKEN
 const sendAuthTokenController = async (req, res) => {
   const { email } = req.body;
   try {
@@ -60,7 +61,7 @@ const sendAuthTokenController = async (req, res) => {
   }
 };
 
-//ENDPOINT SYSTEM 1 --- LOGIN
+//ENDPOINT SYSTEM 2 --- LOGIN
 const login = catchError(async (req, res) => {
   const { email, login_token } = req.body;
 
@@ -116,7 +117,7 @@ const login = catchError(async (req, res) => {
   }
 });
 
-// ENDPOINT DEL SISTEMA 4 --- OBTENER USUARIO LOGUEADO
+// ENDPOINT DEL SISTEMA 3 --- OBTENER USUARIO LOGUEADO
 const getMe = catchError(async (req, res) => {
   const { id } = req.user;
   const sessionAge = req.iat;
@@ -136,7 +137,7 @@ const getMe = catchError(async (req, res) => {
   });
 });
 
-
+// ENDPOINT SYSTEM 4 --- VERIFY ADMIN
 const verifyAdmin = async (req, res) => {
   const authHeader = req.headers.authorization || req.headers.Authorization;
   if (!authHeader?.startsWith("Bearer ")) return res.sendStatus(401);
@@ -152,9 +153,49 @@ const verifyAdmin = async (req, res) => {
   return res.status(200)
 };
 
+// ENDPOINT SYSTEM 5 --- SAVE TOKEN FOR PUSH NOTIFICATIONS
+const savePushToken = async (req, res) => {
+  try {
+    const { userId, pushToken } = req.body;
+
+    const user = await Users.findByPk(userId);
+    if (!user) {
+      return res.status(404).json({ error: "Usuario no encontrado" });
+    }
+
+    user.pushToken = pushToken;
+    await user.save();
+
+    res.json({ success: true });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Error al guardar el token push" });
+  }
+};
+
+// ENDPOINT SYSTEM 6 --- SEND CUSTOM NOTIFICATION
+const sendCustomNotification = async (req, res) => { 
+  try {
+    const { title, message, data } = req.body;
+    const allUsers = await Users.findAll();
+    const notifications = allUsers.map(async (user) => {
+      if (user.pushToken) {
+        await sendPushNotification(user.pushToken, title, message, data);
+      }
+    });
+    await Promise.all(notifications);
+    res.json({ success: true });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Error al enviar notificaciones" });
+  }
+};
+
 module.exports = {
   login,
   sendAuthTokenController,
   getMe,
   verifyAdmin,
+  savePushToken,
+  sendCustomNotification
 };

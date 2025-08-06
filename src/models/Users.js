@@ -44,7 +44,11 @@ const Users = sequelize.define(
      last_login: {
       type: DataTypes.DATE,
       allowNull: true,
-    }
+    },
+    pushToken: {
+      type: DataTypes.STRING,
+      allowNull: true, // Puede ser null si el usuario no permite notificaciones
+    },
   },
   {
     timestamps: false,

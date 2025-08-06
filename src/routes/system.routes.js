@@ -1,4 +1,4 @@
-const { login, sendAuthTokenController, getMe} = require('../controllers/system.controller');
+const { login, sendAuthTokenController, getMe, savePushToken} = require('../controllers/system.controller');
 const express = require('express');
 const verifyJWT = require('../middlewares/auth.middleware');
 const isAdmin = require('../middlewares/isAdmin.middleware');
@@ -14,8 +14,8 @@ systemRouter.route("/request_auth_token")
 systemRouter.route("/me")
     .get(verifyJWT, getMe)
 
-// systemRouter.route("/reset_password")
-//     .post(resetPaswwordMail)
+systemRouter.route("/save-push-token")
+    .post(savePushToken)
 
 // systemRouter.route("/update_password")
 //     .post(updatePassword)
