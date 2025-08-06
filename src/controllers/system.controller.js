@@ -183,10 +183,6 @@ const sendCustomNotification = async (req, res) => {
         },
       },
     });
-    console.log(
-      "Enviando notificaciones a todos los usuarios:",
-      allUsers.length
-    );
 
     const notifications = allUsers.map(async (user) => {
       if (user.pushToken) {
