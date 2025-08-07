@@ -120,7 +120,11 @@ const getMe = catchError(async (req, res) => {
   const { id } = req.user;
   const sessionAge = req.iat;
   const user = await Users.findByPk(id);
-  if (user.passwordChangeAt > sessionAge || !user.status) {
+  if ((user.passwordChangeAt > sessionAge) || !user.status) {
+    await user.update({
+      login_token: null,
+      token_expires: null,
+    });
     return res.status(401).json({ message: "Unauthorized" });
   }
 
