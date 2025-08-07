@@ -124,11 +124,6 @@ const getMe = catchError(async (req, res) => {
     return res.status(401).json({ message: "Unauthorized" });
   }
 
-  await user.update({
-    login_token: null,
-    token_expires: null,
-  });
-
   res.json({
     success: true,
     user,
