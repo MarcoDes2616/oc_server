@@ -1,5 +1,7 @@
 const { getAll, create, remove, update } = require('../controllers/instruments.controller');
 const express = require('express');
+const verifyJWT = require('../middlewares/auth.middleware');
+const isAdmin = require('../middlewares/isAdmin.middleware');
 
 const instrumentsRouter = express.Router();
 
