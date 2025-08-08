@@ -1,15 +1,14 @@
-const { getAll, create, getOne, remove, update } = require('../controllers/instruments.controller');
+const { getAll, create, remove, update } = require('../controllers/instruments.controller');
 const express = require('express');
 
 const instrumentsRouter = express.Router();
 
 instrumentsRouter.route('')
-    .get(getAll)
-    .post(create);
+    .get(verifyJWT, isAdmin, getAll)
+    .post(verifyJWT, isAdmin, create);
 
 instrumentsRouter.route('/:id')
-    .get(getOne)
-    .delete(remove)
-    .put(update);
+    .delete(verifyJWT, isAdmin, remove)
+    .put(verifyJWT, isAdmin, update);
 
 module.exports = instrumentsRouter;
