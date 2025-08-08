@@ -1,19 +1,59 @@
 const jwt = require('jsonwebtoken');
+const Users = require("../models/Users");
 require('dotenv').config();
 
-const verifyJWT = (req, res, next) => {
+const verifyJWT = async (req, res, next) => {
     const authHeader = req.headers.authorization || req.headers.Authorization;
     const token = authHeader?.split(' ')[1];
-    if (!authHeader?.startsWith('Bearer ') || !token) return res.sendStatus(401);
+    
+    if (!authHeader?.startsWith('Bearer ') || !token) {
+        return res.status(401).json({ 
+            code: 'TOKEN_REQUIRED', 
+            message: 'Token de autenticación no proporcionado' 
+        });
+    }
 
     try {
-        const {user, iat} = jwt.verify(token, process.env.TOKEN_SECRET);
-        req.user = user;
+        const { user: userData, iat } = jwt.verify(token, process.env.TOKEN_SECRET);
+        
+        // Verificar usuario en base de datos
+        const user = await Users.findOne({
+            where: { id: userData.id, status: true }
+        });
+
+        if (!user || !user.status) {
+            return res.status(401).json({
+                code: 'USER_NOT_FOUND',
+                message: 'Usuario no existe o está inactivo'
+            });
+        }
+
+        // Convertir last_login a timestamp UNIX (segundos)
+        const lastLoginSeconds = Math.floor(new Date(user.last_login).getTime() / 1000);
+        
+        // Comparar con iat del token
+        if (iat < lastLoginSeconds) {
+            return res.status(401).json({
+                code: 'SESSION_EXPIRED',
+                message: 'Sesión inválida. Por favor inicie sesión nuevamente'
+            });
+        }
+
+        req.user = userData;
         req.iat = iat;
         next();
     } catch (error) {
-        return res.status(401).json({ message: "Invalid token" });
+        console.error('Error en verifyJWT:', error);
+        
+        const message = error.name === 'TokenExpiredError' 
+            ? 'Token expirado' 
+            : 'Token inválido';
+            
+        res.status(401).json({ 
+            code: 'INVALID_TOKEN', 
+            message 
+        });
     }
-}
+};
 
 module.exports = verifyJWT;

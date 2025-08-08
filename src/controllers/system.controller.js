@@ -61,58 +61,62 @@ const sendAuthTokenController = async (req, res) => {
 
 //ENDPOINT SYSTEM 2 --- LOGIN
 const login = catchError(async (req, res) => {
-  const { email, login_token } = req.body;
+    const { email, login_token } = req.body;
 
-  try {
     const user = await Users.findOne({
-      where: {
-        email,
-        login_token,
-        token_expires: { [Op.gt]: new Date() },
-        status: true,
-      },
+        where: {
+            email,
+            login_token,
+            token_expires: { [Op.gt]: new Date() },
+            status: true,
+        },
     });
 
     if (!user) {
-      return res.status(401).json({
-        success: false,
-        message: "Token inválido o expirado",
-      });
+        return res.status(401).json({
+            success: false,
+            code: 'INVALID_CREDENTIALS',
+            message: "Token inválido o expirado",
+        });
     }
 
-    const authToken = jwt.sign({ user }, process.env.TOKEN_SECRET, {
-      expiresIn: process.env.TOKEN_EXPIRES_IN,
-    });
-
-    const newTokenExpires = new Date();
-    newTokenExpires.setDate(newTokenExpires.getDate() + 7);
-
+    // Actualizar last_login ANTES de generar el token
+    const lastLogin = new Date();
     await user.update({
-      last_login: new Date(),
-      token_expires: newTokenExpires,
+        last_login: lastLogin,
+        token_expires: new Date(lastLogin.getTime() + 7 * 24 * 60 * 60 * 1000) // +7 días
     });
 
-    const userData = {
-      id: user.id,
-      firstname: user.firstname,
-      lastname: user.lastname,
-      email: user.email,
-      telegram_user: user.telegram_user,
-    };
+    // Generar token con el nuevo timestamp
+    const authToken = jwt.sign(
+        { 
+            user: {
+                id: user.id,
+                firstname: user.firstname,
+                lastname: user.lastname,
+                email: user.email,
+                telegram_user: user.telegram_user
+            } 
+        }, 
+        process.env.TOKEN_SECRET, 
+        {
+            expiresIn: process.env.TOKEN_EXPIRES_IN,
+            iat: Math.floor(Date.now() / 1000) // Asegurar iat preciso
+        }
+    );
 
     res.status(200).json({
-      success: true,
-      message: "Autenticación exitosa",
-      token: authToken,
-      user: userData,
+        success: true,
+        message: "Autenticación exitosa",
+        token: authToken,
+        user: {
+            id: user.id,
+            firstname: user.firstname,
+            lastname: user.lastname,
+            email: user.email,
+            telegram_user: user.telegram_user
+        }
     });
-  } catch (error) {
-    console.error("Error en loginWithTokenController:", error);
-    res.status(500).json({
-      success: false,
-      message: "Error en el servidor",
-    });
-  }
 });
 
 // ENDPOINT DEL SISTEMA 3 --- OBTENER USUARIO LOGUEADO
