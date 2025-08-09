@@ -7,36 +7,18 @@ const getAll = catchError(async (req, res) => {
 });
 
 const create = catchError(async (req, res) => {
-  const isAdmin = req.isAdmin;
-  if (!isAdmin) {
-    return res
-      .status(403)
-      .json({ error: "Sin permisos" });
-  }
   const result = await Instruments.create(req.body);
   return res.status(201).json(result);
 });
 
 const remove = catchError(async (req, res) => {
   const { id } = req.params;
-  const isAdmin = req.isAdmin;
-  if (!isAdmin) {
-    return res
-      .status(403)
-      .json({ error: "Sin permisos" });
-  }
   await Instruments.destroy({ where: { id } });
   return res.sendStatus(204);
 });
 
 const update = catchError(async (req, res) => {
   const { id } = req.params;
-  const isAdmin = req.isAdmin;
-  if (!isAdmin) {
-    return res
-      .status(403)
-      .json({ error: "Sin permisos" });
-  }
   const result = await Instruments.update(req.body, {
     where: { id },
     returning: true,
