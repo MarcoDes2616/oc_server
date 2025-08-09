@@ -20,7 +20,10 @@ const getOne = catchError(async(req, res) => {
 
 const remove = catchError(async(req, res) => {
     const { id } = req.params;
-    await Projects.destroy({ where: {id} });
+    await Projects.update(
+        { status: false },
+        { where: {id} }
+    );
     return res.sendStatus(204);
 });
 

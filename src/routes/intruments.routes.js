@@ -6,7 +6,7 @@ const isAdmin = require('../middlewares/isAdmin.middleware');
 const instrumentsRouter = express.Router();
 
 instrumentsRouter.route('')
-    .get(verifyJWT, isAdmin, getAll)
+    .get(verifyJWT, getAll)
     .post(verifyJWT, isAdmin, create);
 
 instrumentsRouter.route('/:id')

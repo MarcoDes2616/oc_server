@@ -87,23 +87,9 @@ const login = catchError(async (req, res) => {
         token_expires: new Date(lastLogin.getTime() + 7 * 24 * 60 * 60 * 1000) // +7 días
     });
 
-    // Generar token con el nuevo timestamp
-    const authToken = jwt.sign(
-        { 
-            user: {
-                id: user.id,
-                firstname: user.firstname,
-                lastname: user.lastname,
-                email: user.email,
-                telegram_user: user.telegram_user
-            } 
-        }, 
-        process.env.TOKEN_SECRET, 
-        {
-            expiresIn: process.env.TOKEN_EXPIRES_IN,
-            iat: Math.floor(Date.now() / 1000) // Asegurar iat preciso
-        }
-    );
+    const authToken = jwt.sign({ user }, process.env.TOKEN_SECRET, {
+      expiresIn: process.env.TOKEN_EXPIRES_IN,
+    });
 
     res.status(200).json({
         success: true,
