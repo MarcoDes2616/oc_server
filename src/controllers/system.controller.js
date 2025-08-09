@@ -162,6 +162,12 @@ const savePushToken = async (req, res) => {
 
 // ENDPOINT SYSTEM 6 --- SEND CUSTOM NOTIFICATION
 const sendCustomNotification = async (req, res) => {
+  
+  const isAdmin = req.isAdmin;
+  if (!isAdmin) {
+    return res.status(403).json({ error: "No tienes permiso para enviar notificaciones" });
+  }
+
   try {
     const { title, message, data } = req.body;
     const allUsers = await Users.findAll({

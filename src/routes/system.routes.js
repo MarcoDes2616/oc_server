@@ -18,7 +18,7 @@ systemRouter.route("/save-push-token")
     .post(savePushToken)
 
 systemRouter.route("/send-custom-notification")
-    .post(sendCustomNotification)   
+    .post(verifyJWT, isAdmin, sendCustomNotification)
 
 // systemRouter.route("/update_password")
 //     .post(updatePassword)
