@@ -11,10 +11,7 @@ const Project = sequelize.define(
     created_by: {
       type: DataTypes.INTEGER,
       allowNull: false,
-    },
-    market_id: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
+      defaultValue: 1,
     },
     init_date: {
       type: DataTypes.DATEONLY,
@@ -27,6 +24,7 @@ const Project = sequelize.define(
     status: {
       type: DataTypes.BOOLEAN,
       allowNull: false,
+      defaultValue: true,
     },
   },
   {

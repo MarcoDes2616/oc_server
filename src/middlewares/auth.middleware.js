@@ -15,8 +15,7 @@ const verifyJWT = async (req, res, next) => {
 
     try {
         const { user: userData, iat } = jwt.verify(token, process.env.TOKEN_SECRET);
-        
-        // Verificar usuario en base de datos
+
         const user = await Users.findOne({
             where: { id: userData.id, status: true }
         });
@@ -40,11 +39,10 @@ const verifyJWT = async (req, res, next) => {
         }
 
         req.user = userData;
+        req.userRole = userData.roleId;
         req.iat = iat;
         next();
     } catch (error) {
-        console.error('Error en verifyJWT:', error);
-        
         const message = error.name === 'TokenExpiredError' 
             ? 'Token expirado' 
             : 'Token inválido';

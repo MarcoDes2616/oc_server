@@ -2,22 +2,11 @@ const catchError = require("../utils/catchError");
 const Users = require("../models/Users");
 
 const getAll = catchError(async (req, res) => {
-  if (!isAdmin) {
-    return res
-      .status(403)
-      .json({ error: "No tienes permiso para enviar notificaciones" });
-  }
   const results = await Users.findAll();
   return res.json(results);
 });
 
 const create = catchError(async (req, res) => {
-  const isAdmin = req.isAdmin;
-  if (!isAdmin) {
-    return res
-      .status(403)
-      .json({ error: "No tienes permiso para enviar notificaciones" });
-  }
   const result = await Users.create(req.body);
   return res.status(201).json(result);
 });
@@ -31,24 +20,12 @@ const getOne = catchError(async (req, res) => {
 
 const remove = catchError(async (req, res) => {
   const { id } = req.params;
-  const isAdmin = req.isAdmin;
-  if (!isAdmin) {
-    return res
-      .status(403)
-      .json({ error: "No tienes permiso para enviar notificaciones" });
-  }
   await Users.update({ status: false }, { where: { id } });
   return res.sendStatus(204);
 });
 
 const update = catchError(async (req, res) => {
   const { id } = req.params;
-  const isAdmin = req.isAdmin;
-  if (!isAdmin) {
-    return res
-      .status(403)
-      .json({ error: "No tienes permiso para enviar notificaciones" });
-  }
   const result = await Users.update(req.body, {
     where: { id },
     returning: true,
