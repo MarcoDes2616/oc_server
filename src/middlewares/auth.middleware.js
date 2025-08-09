@@ -37,10 +37,10 @@ const verifyJWT = async (req, res, next) => {
                 message: 'Sesión inválida. Por favor inicie sesión nuevamente'
             });
         }
-
-        req.user = userData;
-        req.userRole = userData.roleId;
+        req.userRole = userData.role_id;
         req.iat = iat;
+        req.user = userData;
+        req.userId = userData.id;
         next();
     } catch (error) {
         const message = error.name === 'TokenExpiredError' 
