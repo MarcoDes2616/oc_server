@@ -27,16 +27,19 @@ const getAll = catchError(async (req, res) => {
   return res.json(results);
 });
 const create = catchError(async (req, res) => {
-  const result = await Signals.create(req.body);
+  const data = req.body;
+  data.created_by = req.userId
+
+  const result = await Signals.create(data);
 
   const allUsers = await Users.findAll();
   const notifications = allUsers.map(async (user) => {
     if (user.pushToken) {
       await sendPushNotification(
         user.pushToken,
-        "Nuevo post creado",
+        "Nueva señal creada",
         `Has creado un nuevo post}`,
-        { postId: "datos adicionales" } // Datos adicionales (opcional)
+        { postId: "datos adicionales" }
       );
     }
   });
