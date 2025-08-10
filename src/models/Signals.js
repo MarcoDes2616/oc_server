@@ -51,9 +51,27 @@ const Signals = sequelize.define(
     },
   },
   {
-    timestamps: false,
+    timestamps: true,
     tableName: "signals",
   }
 );
+
+
+Signals.afterFind(async(signal) => {
+  if (signal.dataValues) {
+      const url = await getFirebaseUrl(signal.image_reference)
+      signal.image_reference = url
+      return
+  }
+
+  const urls = signal.map(async(item) => {
+      if(item.image_reference){
+          const url = await getFirebaseUrl(item.image_reference)
+          item.image_reference = url
+      }
+  })
+  await Promise.all(urls)
+  return signal
+})
 
 module.exports = Signals;
