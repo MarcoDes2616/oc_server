@@ -22,35 +22,28 @@ const Signals = sequelize.define(
     },
     price_range_min: {
       type: DataTypes.DECIMAL,
-      allowNull: false,
+      allowNull: true,
     },
     price_range_max: {
       type: DataTypes.DECIMAL,
-      allowNull: false,
+      allowNull: true,
     },
     expected_target: {
       type: DataTypes.DECIMAL,
-      allowNull: false,
+      allowNull: true,
     },
     entry_point: {
       type: DataTypes.DECIMAL,
-      allowNull: false,
+      allowNull: true,
     },
-    max_drop_down: {
+    sl_price: {
       type: DataTypes.DECIMAL,
-      allowNull: false,
-    },
-    init_date: {
-      type: DataTypes.DATEONLY,
-      allowNull: false,
-    },
-    end_date: {
-      type: DataTypes.DATEONLY,
       allowNull: true,
     },
     signal_status_id: {
       type: DataTypes.INTEGER,
       allowNull: false,
+      defaultValue: 5, // Default to "Pending"
     },
     is_successful: {
       type: DataTypes.BOOLEAN,
