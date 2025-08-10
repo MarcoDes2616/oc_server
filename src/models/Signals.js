@@ -1,5 +1,6 @@
 const { DataTypes } = require("sequelize");
 const sequelize = require("../utils/connection");
+const { getFirebaseUrl } = require("../middlewares/firebase.middleware");
 
 const Signals = sequelize.define(
   "signals",
