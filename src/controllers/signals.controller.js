@@ -4,10 +4,28 @@ const Users = require("../models/Users");
 const { sendPushNotification } = require("../utils/notificationService");
 
 const getAll = catchError(async (req, res) => {
-  const results = await Signals.findAll();
+  const { 
+    project_id,
+    instrument_id,
+    operation_type_id,
+    signal_status_id
+  } = req.query;
+
+  // Construir el objeto de condiciones WHERE
+  const whereClause = {};  
+  if (project_id) whereClause.project_id = project_id;
+  if (instrument_id) whereClause.instrument_id = instrument_id;
+  if (operation_type_id) whereClause.operation_type_id = operation_type_id;
+  if (signal_status_id) whereClause.signal_status_id = signal_status_id;
+
+  // Consulta con filtros
+  const results = await Signals.findAll({
+    where: whereClause,
+    order: [['createdAt', 'DESC']]
+  });
+
   return res.json(results);
 });
-
 const create = catchError(async (req, res) => {
   const result = await Signals.create(req.body);
 
