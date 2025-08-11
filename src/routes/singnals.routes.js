@@ -8,8 +8,8 @@ const { firebaseFile } = require('../middlewares/firebase.middleware');
 const signalsRouter = express.Router();
 
 signalsRouter.route('')
-    .get(verifyJWT, getAll)
-    .post(verifyJWT, isAdmin, upload.single("image_reference"), firebaseFile, create);
+    .get(getAll)
+    .post(upload.single("image_reference"), firebaseFile, create);
 
 signalsRouter.route('/:id')
     .get(verifyJWT, getOne)

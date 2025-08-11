@@ -6,7 +6,7 @@ const isAdmin = require('../middlewares/isAdmin.middleware');
 const projectsRouter = express.Router();
 
 projectsRouter.route('')
-    .get(verifyJWT, getAll)
+    .get( getAll)
     .post(verifyJWT, isAdmin, create);
 
 projectsRouter.route('/:id')
