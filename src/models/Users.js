@@ -60,7 +60,6 @@ const Users = sequelize.define(
 Users.prototype.toJSON = function () {
   const values = Object.assign({}, this.get());
   delete values.last_login;
-  delete values.pushToken;
   delete values.login_token;
   delete values.token_expires;  
   return values;
