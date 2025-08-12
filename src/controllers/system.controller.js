@@ -186,6 +186,23 @@ const sendCustomNotification = async (req, res) => {
   }
 };
 
+const deletePushToken = async (req, res) => {
+  try {;
+
+    const user = await Users.findByPk(req.userId);
+    if (!user) {
+      return res.status(404).json({ error: "Usuario no encontrado" });
+    }
+
+    user.pushToken = null;
+    await user.save();
+
+    res.json({ success: true });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Error al eliminar el token push" });
+  }
+
 module.exports = {
   login,
   sendAuthTokenController,
