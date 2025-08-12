@@ -202,7 +202,7 @@ const deletePushToken = async (req, res) => {
     console.error(error);
     res.status(500).json({ error: "Error al eliminar el token push" });
   }
-
+};
 module.exports = {
   login,
   sendAuthTokenController,
@@ -210,4 +210,5 @@ module.exports = {
   verifyAdmin,
   savePushToken,
   sendCustomNotification,
+  deletePushToken
 };
