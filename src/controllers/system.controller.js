@@ -95,13 +95,7 @@ const login = catchError(async (req, res) => {
         success: true,
         message: "Autenticación exitosa",
         token: authToken,
-        user: {
-            id: user.id,
-            firstname: user.firstname,
-            lastname: user.lastname,
-            email: user.email,
-            telegram_user: user.telegram_user
-        }
+        user
     });
 });
 
