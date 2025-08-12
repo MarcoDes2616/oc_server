@@ -101,9 +101,8 @@ const login = catchError(async (req, res) => {
 
 // ENDPOINT DEL SISTEMA 3 --- OBTENER USUARIO LOGUEADO
 const getMe = catchError(async (req, res) => {
-  const { id } = req.user;
   const sessionAge = req.iat;
-  const user = await Users.findByPk(id);
+  const user = await Users.findByPk(req.userId);
   if ((user.passwordChangeAt > sessionAge) || !user.status) {
     await user.update({
       login_token: null,
@@ -175,7 +174,6 @@ const sendCustomNotification = async (req, res) => {
     await Promise.all(notifications);
     res.json({ success: true });
   } catch (error) {
-    console.error(error);
     res.status(500).json({ error: "Error al enviar notificaciones" });
   }
 };
@@ -191,9 +189,8 @@ const deletePushToken = async (req, res) => {
     user.pushToken = null;
     await user.save();
 
-    res.json({ success: true });
+    res.json({ success: true, user });
   } catch (error) {
-    console.error(error);
     res.status(500).json({ error: "Error al eliminar el token push" });
   }
 };
