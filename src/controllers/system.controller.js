@@ -23,7 +23,7 @@ const sendAuthTokenController = async (req, res) => {
         message: "Si el email está registrado, recibirás un token de acceso",
       });
     }
-    const token = crypto.randomBytes(6).toString("hex").toUpperCase(); // 12 caracteres alfanuméricos en mayúsculas
+    const token = crypto.randomBytes(6).toString("hex").toUpperCase();
 
     user.login_token = token;
     user.token_expires = new Date(Date.now() + 30 * 60 * 1000);
@@ -86,7 +86,7 @@ const login = catchError(async (req, res) => {
       return res.status(403).json({
         success: false,
         message: 'Ya existe una sesión activa',
-        code: 'SESSION_INACTIVE',
+        code: 'SESSION_ACTIVE',
         session: {
           last_login: user.last_login
         }
@@ -96,7 +96,8 @@ const login = catchError(async (req, res) => {
     const lastLogin = new Date();
     await user.update({
         last_login: lastLogin,
-        token_expires: new Date(lastLogin.getTime() + 7 * 24 * 60 * 60 * 1000) // +7 días
+        token_expires: new Date(lastLogin.getTime() + 7 * 24 * 60 * 60 * 1000),
+        active_session: true
     });
 
     const authToken = jwt.sign({ user }, process.env.TOKEN_SECRET, {
