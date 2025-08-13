@@ -27,16 +27,6 @@ const verifyJWT = async (req, res, next) => {
             });
         }
 
-        // Convertir last_login a timestamp UNIX (segundos)
-        const lastLoginSeconds = Math.floor(new Date(user.last_login).getTime() / 1000);
-        
-        // Comparar con iat del token
-        if (iat < lastLoginSeconds) {
-            return res.status(401).json({
-                code: 'SESSION_EXPIRED',
-                message: 'Sesión inválida. Por favor inicie sesión nuevamente'
-            });
-        }
         req.userRole = userData.role_id;
         req.iat = iat;
         req.user = userData;

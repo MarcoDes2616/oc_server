@@ -48,8 +48,12 @@ const Users = sequelize.define(
     },
     pushToken: {
       type: DataTypes.STRING,
-      allowNull: true, // Puede ser null si el usuario no permite notificaciones
+      allowNull: true,
     },
+    activeSession: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false,
+    }
   },
   {
     timestamps: false,
