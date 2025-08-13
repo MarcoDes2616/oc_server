@@ -26,7 +26,9 @@ const sendAuthTokenController = async (req, res) => {
     const token = crypto.randomBytes(6).toString("hex").toUpperCase(); // 12 caracteres alfanuméricos en mayúsculas
 
     user.login_token = token;
-    user.token_expires = new Date(Date.now() + 30 * 60 * 1000); // 30 minutos
+    user.token_expires = new Date(Date.now() + 30 * 60 * 1000);
+    user.active_session = false;
+    
     await user.save();
     await sendEmail({
       to: user.email,
@@ -80,7 +82,17 @@ const login = catchError(async (req, res) => {
         });
     }
 
-    // Actualizar last_login ANTES de generar el token
+    if (user?.active_session) {
+      return res.status(403).json({
+        success: false,
+        message: 'Ya existe una sesión activa',
+        code: 'SESSION_INACTIVE',
+        session: {
+          last_login: user.last_login
+        }
+      });
+    }
+
     const lastLogin = new Date();
     await user.update({
         last_login: lastLogin,
@@ -117,21 +129,29 @@ const getMe = catchError(async (req, res) => {
   });
 });
 
-// ENDPOINT SYSTEM 4 --- VERIFY ADMIN
-const verifyAdmin = async (req, res) => {
-  const authHeader = req.headers.authorization || req.headers.Authorization;
-  if (!authHeader?.startsWith("Bearer ")) return res.sendStatus(401);
-  const token = authHeader.split(" ")[1];
-  const { user } = jwt.verify(token, process.env.TOKEN_SECRET);
-  if (user.roleId !== 1 || !user.status) {
-    const resu = await Users.update(
-      { status: false },
-      { where: { id: user.id }, returning: true }
-    );
-    return res.status(401).json({ message: "Unauthorized" });
+// ENDPOINT SYSTEM 4 --- LOGOUT
+const logout = catchError(async (req, res) => {
+  const user = await Users.findByPk(req.userId);
+  
+  if (!user) {
+    return res.status(404).json({
+      success: false,
+      message: "Usuario no encontrado"
+    });
   }
-  return res.status(200);
-};
+
+  await user.update({
+    login_token: null,
+    token_expires: null,
+    last_login: null,
+    active_session: false
+  });
+
+  res.status(200).json({
+    success: true,
+    message: "Sesión cerrada exitosamente"
+  });
+});
 
 // ENDPOINT SYSTEM 5 --- SAVE TOKEN FOR PUSH NOTIFICATIONS
 const savePushToken = async (req, res) => {
@@ -199,8 +219,8 @@ module.exports = {
   login,
   sendAuthTokenController,
   getMe,
-  verifyAdmin,
   savePushToken,
   sendCustomNotification,
-  deletePushToken
+  deletePushToken,
+  logout
 };

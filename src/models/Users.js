@@ -50,7 +50,7 @@ const Users = sequelize.define(
       type: DataTypes.STRING,
       allowNull: true,
     },
-    activeSession: {
+    active_session: {
       type: DataTypes.BOOLEAN,
       defaultValue: false,
     }

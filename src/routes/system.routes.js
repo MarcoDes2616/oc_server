@@ -5,6 +5,7 @@ const {
   savePushToken,
   sendCustomNotification,
   deletePushToken,
+  logout
 } = require("../controllers/system.controller");
 const express = require("express");
 const verifyJWT = require("../middlewares/auth.middleware");
@@ -22,26 +23,10 @@ systemRouter.route("/save-push-token").post(savePushToken);
 
 systemRouter.route("/delete-push-token").post(verifyJWT, deletePushToken);
 
+systemRouter.route("/logout").post(verifyJWT, logout)
+
 systemRouter
   .route("/send-custom-notification")
   .post(verifyJWT, isAdmin, sendCustomNotification);
-
-// systemRouter.route("/update_password")
-//     .post(updatePassword)
-
-// systemRouter.route("/verify_email")
-//     .post(requestEmailVerification)
-
-// systemRouter.route("/send_form")
-//     .post(handleSaveForm)
-
-// systemRouter.route("/get_registre")
-//     .get(isAdmin, handleGetUsers)
-
-// systemRouter.route("/verifyAdmin")
-//     .get(verifyAdmin)
-
-// systemRouter.route("/verify_email/:token")
-//     .get(verifyEmail)
 
 module.exports = systemRouter;
