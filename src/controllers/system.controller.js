@@ -142,8 +142,6 @@ const logout = catchError(async (req, res) => {
   }
 
   await user.update({
-    login_token: null,
-    token_expires: null,
     last_login: null,
     active_session: false
   });
