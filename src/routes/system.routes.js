@@ -10,7 +10,7 @@ const {
 const express = require("express");
 const verifyJWT = require("../middlewares/auth.middleware");
 const isAdmin = require("../middlewares/isAdmin.middleware");
-const loginValidator = require("../middlewares/loginValidator");
+const loginValidator = require("../middlewares/loginValidator.middleware");
 
 const systemRouter = express.Router();
 
