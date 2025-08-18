@@ -72,7 +72,7 @@ const login = catchError(async (req, res) => {
         active_session: true
     });
 
-    const authToken = signUserToken();
+    const authToken = signUserToken(user);
     
     res.status(200).json({
         success: true,
