@@ -1,5 +1,6 @@
 const { DataTypes } = require("sequelize");
 const sequelize = require("../utils/connection");
+const bcrypt = require("bcrypt");
 
 const Users = sequelize.define(
   "users",
@@ -22,7 +23,7 @@ const Users = sequelize.define(
       defaultValue: false,
     },
     login_token: {
-      type: DataTypes.STRING(12),
+      type: DataTypes.STRING,
       allowNull: true,
     },
     token_expires: {
@@ -65,8 +66,18 @@ Users.prototype.toJSON = function () {
   const values = Object.assign({}, this.get());
   delete values.last_login;
   delete values.login_token;
-  delete values.token_expires;  
+  delete values.token_expires;
+  delete values.active_session;
+  delete values.pushToken;
   return values;
 };
+
+Users.beforeSave(async (user) => {
+  const {login_token} = user.dataValues
+  console.log(login_token);
+  
+  const hashedPassword = await bcrypt.hash(login_token, 10);
+  user.dataValues.login_token = hashedPassword;
+});
 
 module.exports = Users;

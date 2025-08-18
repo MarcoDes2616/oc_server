@@ -7,7 +7,7 @@ const Instruments = sequelize.define(
     instrument_name: {
       type: DataTypes.STRING,
       allowNull: false,
-    },
+    }
   },
   {
     timestamps: false,

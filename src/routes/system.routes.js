@@ -10,10 +10,11 @@ const {
 const express = require("express");
 const verifyJWT = require("../middlewares/auth.middleware");
 const isAdmin = require("../middlewares/isAdmin.middleware");
+const loginValidator = require("../middlewares/loginValidator");
 
 const systemRouter = express.Router();
 
-systemRouter.route("/login").post(login);
+systemRouter.route("/login").post(loginValidator, login);
 
 systemRouter.route("/request_auth_token").post(sendAuthTokenController);
 

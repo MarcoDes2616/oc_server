@@ -1,13 +1,13 @@
 const catchError = require("../utils/catchError");
 const Users = require("../models/Users");
-const jwt = require("jsonwebtoken");
-const sendEmail = require("../utils/sendMail");
 require("dotenv").config();
+const sendEmail = require("../utils/sendMail");
 const crypto = require("crypto");
 const { Op } = require("sequelize");
 const { sendPushNotification } = require("../utils/notificationService");
+const signUserToken = require("../utils/signToken");
 
-//ENDPOINT SYSTEM 1 -- REQUEST EMAIL TOKEN
+//ENDPOINT SYSTEM 1 -- SOLICITUD DE TOKEN POR EMAIL
 const sendAuthTokenController = async (req, res) => {
   const { email } = req.body;
   try {
@@ -63,36 +63,8 @@ const sendAuthTokenController = async (req, res) => {
 
 //ENDPOINT SYSTEM 2 --- LOGIN
 const login = catchError(async (req, res) => {
-    const { email, login_token } = req.body;
-
-    const user = await Users.findOne({
-        where: {
-            email,
-            login_token,
-            token_expires: { [Op.gt]: new Date() },
-            status: true,
-        },
-    });
-
-    if (!user) {
-        return res.status(401).json({
-            success: false,
-            code: 'INVALID_CREDENTIALS',
-            message: "Token inválido o expirado",
-        });
-    }
-
-    if (user?.active_session) {
-      return res.status(403).json({
-        success: false,
-        message: 'Ya existe una sesión activa',
-        code: 'SESSION_ACTIVE',
-        session: {
-          last_login: user.last_login
-        }
-      });
-    }
-
+    const { user } = req;
+    
     const lastLogin = new Date();
     await user.update({
         last_login: lastLogin,
@@ -100,10 +72,8 @@ const login = catchError(async (req, res) => {
         active_session: true
     });
 
-    const authToken = jwt.sign({ user }, process.env.TOKEN_SECRET, {
-      expiresIn: process.env.TOKEN_EXPIRES_IN,
-    });
-
+    const authToken = signUserToken();
+    
     res.status(200).json({
         success: true,
         message: "Autenticación exitosa",
@@ -152,7 +122,7 @@ const logout = catchError(async (req, res) => {
   });
 });
 
-// ENDPOINT SYSTEM 5 --- SAVE TOKEN FOR PUSH NOTIFICATIONS
+// ENDPOINT SYSTEM 5 --- GUARDAR PUSH TOKEN
 const savePushToken = async (req, res) => {
   try {
     const { userId, pushToken } = req.body;
@@ -172,7 +142,7 @@ const savePushToken = async (req, res) => {
   }
 };
 
-// ENDPOINT SYSTEM 6 --- SEND CUSTOM NOTIFICATION
+// ENDPOINT SYSTEM 6 --- ENVIAR NOTIFICACION PERSONALIZADA
 const sendCustomNotification = async (req, res) => {
   try {
     const { title, message, data } = req.body;
@@ -197,6 +167,7 @@ const sendCustomNotification = async (req, res) => {
   }
 };
 
+// ENDPOINT SYSTEM 7 --- ELIMINAR PUSH TOKEN
 const deletePushToken = async (req, res) => {
   try {;
 

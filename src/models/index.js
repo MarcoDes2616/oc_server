@@ -19,6 +19,10 @@ const initModels = () => {
   Markets.hasMany(Projects, { foreignKey: "market_id" });
   Projects.belongsTo(Markets, { foreignKey: "market_id" });
 
+  // Market 1 ----- * Instruments
+  Markets.hasMany(Instruments, { foreignKey: "market_id" });
+  Instruments.belongsTo(Markets, { foreignKey: "market_id" });
+
   // Users 1 ----- * UserProyect
   Users.hasMany(UserProyect, { foreignKey: "user_id" });
   UserProyect.belongsTo(Users, { foreignKey: "user_id" });

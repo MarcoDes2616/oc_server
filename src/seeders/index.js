@@ -9,44 +9,36 @@ const Users = require("../models/Users");
 
 const role = [{ role_name: "Admin" }, { role_name: "usuario" }];
 
-const instruments = [
-  {instrument_name: "V10"}, 
-  {instrument_name: "V25"}, 
-  {instrument_name: "V75"}, 
-  {instrument_name: "V50"}, 
-  {instrument_name: "STEP"}, 
-  {instrument_name: "V100"}
-]
-
 const markets = [
   { market_name: "Forex" },
   { market_name: "Indices" },
-  { market_name: "Cryptocurrencies" },
+  { market_name: "Cryptomonedas" },
   { market_name: "Commodities" },
+  { market_name: "Sintéticos"}
 ];
+
+const instruments = [
+  {instrument_name: "V10", market_id: 5}, 
+  {instrument_name: "V25", market_id: 5}, 
+  {instrument_name: "V75", market_id: 5}, 
+  {instrument_name: "V50", market_id: 5}, 
+  {instrument_name: "STEP", market_id: 5}, 
+  {instrument_name: "V100", market_id: 5}
+]
 
 const operationsTypes = [
   { operation_type_name: "Buy" },
   { operation_type_name: "Sell" },
-  { operation_type_name: "Close" },
-  { operation_type_name: "Pending" },
-  { operation_type_name: "Stop Loss" },
-  { operation_type_name: "Take Profit" },
-  { operation_type_name: "Pending Buy" },
-  { operation_type_name: "Pending Sell" },
-  { operation_type_name: "Pending Close" },
-  { operation_type_name: "Pending Stop Loss" },
-  { operation_type_name: "Pending Take Profit" },
 ];
 
 const signalStatus = [
-  { signal_status_name: "Active" },
-  { signal_status_name: "Inactive" },
-  { signal_status_name: "Completed" },
-  { signal_status_name: "Cancelled" },
-  { signal_status_name: "Pending" },
-  { signal_status_name: "Failed" },
-  { signal_status_name: "Scheduled" },
+  { signal_status_name: "Activa" },
+  { signal_status_name: "Inactiva" },
+  { signal_status_name: "Completada" },
+  { signal_status_name: "Cancelada" },
+  { signal_status_name: "Pendiente" },
+  { signal_status_name: "Fallida" },
+  { signal_status_name: "Programada" },
 ]
 
 const usersData = [
@@ -62,40 +54,15 @@ const usersData = [
     telegram_user: "Mrk_als",
   },
   {
-    firstname: "Ana",
-    lastname: "Gómez",
-    username: "anag",
-    email: "ana.gomez@example.com",
-    role_id: 2,
-    password_change_at: new Date("2025-06-01T14:30:00Z"),
+    firstname: "Teodocio",
+    lastname: "Peraza",
+    username: "teo",
+    email: "teo1344@gmail.com",
+    role_id: 1,
+    sign_declare: true,
     created_at: new Date("2025-03-20T08:15:00Z"),
     status: true,
-    telegram_user: null,
-  },
-  {
-    firstname: "Carlos",
-    lastname: "Ramírez",
-    username: "carlr",
-    email: "carlos.ramirez@example.com",
-    role_id: 2,
-    sign_declare: true,
-    created_at: new Date("2025-05-10T12:00:00Z"),
-    status: false,
-    telegram_user: "carlos_telegram",
-  },
-  {
-    firstname: "Laura",
-    lastname: "Martínez",
-    username: "lauram",
-    email: "laura.martinez@example.com",
-    role_id: 2,
-    sign_declare: true,
-    password: "hashedpassword4",
-    reset_code: "XYZ789",
-    password_change_at: new Date("2025-07-01T09:45:00Z"),
-    created_at: new Date("2025-04-25T16:20:00Z"),
-    status: true,
-    telegram_user: null,
+    telegram_user: "Tradingsinfrontera",
   },
 ];
 
@@ -113,7 +80,6 @@ initModels()
 sequelize
   .sync({ force: true })
   .then(async () => {
-    // console.log('Seeding database...');
     await seedCreate();
     console.log("Seeding completed successfully.");
   })
