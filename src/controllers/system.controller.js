@@ -84,19 +84,9 @@ const login = catchError(async (req, res) => {
 
 // ENDPOINT DEL SISTEMA 3 --- OBTENER USUARIO LOGUEADO
 const getMe = catchError(async (req, res) => {
-  const sessionAge = req.iat;
-  const user = await Users.findByPk(req.userId);
-  if ((user.passwordChangeAt > sessionAge) || !user.status) {
-    await user.update({
-      login_token: null,
-      token_expires: null,
-    });
-    return res.status(401).json({ message: "Unauthorized" });
-  }
-
-  res.json({
+  res.status(200).json({
     success: true,
-    user,
+    user: req.user,
   });
 });
 
