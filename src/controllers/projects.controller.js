@@ -7,7 +7,7 @@ const getAll = catchError(async (req, res) => {
   if (status) whereClause.status = status;
   const results = await Projects.findAll({
     where: whereClause,
-    order: [['status', 'ASC']]
+    order: [['status', 'DESC']]
   });
   return res.json(results);
 });
