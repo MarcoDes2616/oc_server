@@ -1,4 +1,4 @@
-const { getAll, create, getOne, remove, update } = require('../controllers/signals.controller');
+const { getAll, create, getOne, remove, update, takeSignal } = require('../controllers/signals.controller');
 const express = require('express');
 const verifyJWT = require('../middlewares/auth.middleware');
 const isAdmin = require('../middlewares/isAdmin.middleware');
@@ -10,6 +10,9 @@ const signalsRouter = express.Router();
 signalsRouter.route('')
     .get(verifyJWT, getAll)
     .post(verifyJWT, isAdmin, upload.single("image_reference"), firebaseFile, create);
+
+signalsRouter.route('/:id/take')
+    .post(verifyJWT, takeSignal);
 
 signalsRouter.route('/:id')
     .get(verifyJWT, getOne)

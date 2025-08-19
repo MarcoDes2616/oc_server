@@ -2,6 +2,7 @@ const catchError = require("../utils/catchError");
 const Signals = require("../models/Signals");
 const Users = require("../models/Users");
 const { sendPushNotification } = require("../utils/notificationService");
+const { SignalTaken } = require("../models/IntermediateModels");
 
 const getAll = catchError(async (req, res) => {
   const { 
@@ -26,6 +27,7 @@ const getAll = catchError(async (req, res) => {
 
   return res.json(results);
 });
+
 const create = catchError(async (req, res) => {
   const data = req.body;
   data.created_by = req.userId
@@ -72,10 +74,35 @@ const update = catchError(async (req, res) => {
   return res.json(result[1][0]);
 });
 
+const takeSignal = catchError(async (req, res) => {
+  const { id: signalId } = req.params;
+  const userId = req.userId;
+  const existingRecord = await SignalTaken.findOne({
+    where: { signal_id: signalId, user_id: userId }
+  });
+  if (existingRecord) {
+    return res.status(400).json({
+      success: false,
+      message: 'Ya has tomado esta señal'
+    });
+  }
+  // Crear nuevo registro
+  const signalTaken = await SignalTaken.create({
+    signal_id: signalId,
+    user_id: userId,
+    taken_at: new Date()
+  });
+  return res.status(200).json({
+    success: true,
+    message: 'Señal marcada como tomada'
+  });
+});
+
 module.exports = {
   getAll,
   create,
   getOne,
   remove,
   update,
+  takeSignal
 };
