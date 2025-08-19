@@ -14,7 +14,8 @@ const create = catchError(async (req, res) => {
 const remove = catchError(async (req, res) => {
   const { id } = req.params;
   await Instruments.destroy({ where: { id } });
-  return res.sendStatus(204);
+  const instruments = await Instruments.findAll();
+  return res.status(204).json(instruments);
 });
 
 const update = catchError(async (req, res) => {
