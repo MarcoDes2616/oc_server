@@ -2,7 +2,13 @@ const catchError = require("../utils/catchError");
 const Projects = require("../models/Projects");
 
 const getAll = catchError(async (req, res) => {
-  const results = await Projects.findAll();
+  const { status } = req.query;
+  const whereClause = {};
+  if (status) whereClause.status = status;
+  const results = await Projects.findAll({
+    where: whereClause,
+    order: [['status', 'ASC']]
+  });
   return res.json(results);
 });
 
