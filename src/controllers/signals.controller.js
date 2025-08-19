@@ -19,18 +19,34 @@ const getAll = catchError(async (req, res) => {
   if (operation_type_id) whereClause.operation_type_id = operation_type_id;
   if (signal_status_id) whereClause.signal_status_id = signal_status_id;
 
-  // Consulta con filtros
+  // Consulta con filtros y relaciones correctas
   const results = await Signals.findAll({
     where: whereClause,
     order: [['createdAt', 'DESC']],
     include: [
       {
-        model: Users,
-        as: 'takenBy',
-        attributes: ['id', 'firstname', "lastname"]
+        model: SignalTaken,
+        include: [{
+          model: Users,
+          attributes: ['id', 'firstname', 'lastname']
+        }]
       }
     ]
   });
+
+  // Formatear la respuesta para incluir información de usuarios que tomaron la señal
+  // const formattedResults = results.map(signal => {
+  //   const signalJSON = signal.toJSON();
+    
+  //   // Extraer usuarios que tomaron esta señal
+  //   const takenByUsers = signalJSON.takenSignals?.map(taken => taken.user) || [];
+    
+  //   return {
+  //     ...signalJSON,
+  //     takenBy: takenByUsers,
+  //     takenSignals: undefined // Eliminamos el array completo de takenSignals para no duplicar info
+  //   };
+  // });
 
   return res.json(results);
 });
