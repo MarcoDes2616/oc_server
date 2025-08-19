@@ -7,7 +7,7 @@ const getAll = catchError(async (req, res) => {
 });
 
 const create = catchError(async (req, res) => {
-  const result = await Instruments.create(req.body);
+  const result = await Instruments.create(req.body, { returning: true });
   return res.status(201).json(result);
 });
 
