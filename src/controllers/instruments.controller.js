@@ -7,15 +7,14 @@ const getAll = catchError(async (req, res) => {
 });
 
 const create = catchError(async (req, res) => {
-  const result = await Instruments.create(req.body, { returning: true });
+  const result = await Instruments.create(req.body);
   return res.status(201).json(result);
 });
 
 const remove = catchError(async (req, res) => {
   const { id } = req.params;
   await Instruments.destroy({ where: { id } });
-  const instruments = await Instruments.findAll();
-  return res.status(204).json(instruments);
+  return res.sendStatus(204);
 });
 
 const update = catchError(async (req, res) => {
