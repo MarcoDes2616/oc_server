@@ -22,7 +22,14 @@ const getAll = catchError(async (req, res) => {
   // Consulta con filtros
   const results = await Signals.findAll({
     where: whereClause,
-    order: [['createdAt', 'DESC']]
+    order: [['createdAt', 'DESC']],
+    include: [
+      {
+        model: Users,
+        as: 'takenBy',
+        attributes: ['id', 'firstname', "lastname"]
+      }
+    ]
   });
 
   return res.json(results);
