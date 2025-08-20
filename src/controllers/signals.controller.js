@@ -34,21 +34,19 @@ const getAll = catchError(async (req, res) => {
     ]
   });
 
-  // Formatear la respuesta para incluir información de usuarios que tomaron la señal
-  // const formattedResults = results.map(signal => {
-  //   const signalJSON = signal.toJSON();
+  const formattedResults = results.map(signal => {
+    const {signal_takens, ...restOfData} = signal.toJSON();
     
-  //   // Extraer usuarios que tomaron esta señal
-  //   const takenByUsers = signalJSON.takenSignals?.map(taken => taken.user) || [];
+    // Extraer usuarios que tomaron esta señal
+    const takenByUsers = signal_takens?.map(taken => taken.user) || [];
     
-  //   return {
-  //     ...signalJSON,
-  //     takenBy: takenByUsers,
-  //     takenSignals: undefined // Eliminamos el array completo de takenSignals para no duplicar info
-  //   };
-  // });
+    return {
+      ...restOfData,
+      takenBy: takenByUsers,
+    };
+  });
 
-  return res.json(results);
+  return res.json(formattedResults);
 });
 
 const create = catchError(async (req, res) => {
