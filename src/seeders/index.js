@@ -53,23 +53,12 @@ const usersData = [
     status: true,
     telegram_user: "Mrk_als",
   },
-  {
-    firstname: "Teodocio",
-    lastname: "Peraza",
-    username: "teo",
-    email: "teo1344@gmail.com",
-    role_id: 1,
-    sign_declare: true,
-    created_at: new Date("2025-03-20T08:15:00Z"),
-    status: true,
-    telegram_user: "Tradingsinfrontera",
-  },
 ];
 
 async function seedCreate() {
   await Roles.bulkCreate(role);
-  await Instruments.bulkCreate(instruments);
   await Markets.bulkCreate(markets);
+  await Instruments.bulkCreate(instruments);
   await OperationTypes.bulkCreate(operationsTypes);
   await SignalStatus.bulkCreate(signalStatus);
   await Users.bulkCreate(usersData);
