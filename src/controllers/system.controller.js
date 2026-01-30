@@ -10,6 +10,7 @@ const signUserToken = require("../utils/signToken");
 //ENDPOINT SYSTEM 1 -- SOLICITUD DE TOKEN POR EMAIL
 const sendAuthTokenController = async (req, res) => {
   const { email } = req.body;
+  
   try {
     const user = await Users.findOne({
       where: {

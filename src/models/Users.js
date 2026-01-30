@@ -74,7 +74,6 @@ Users.prototype.toJSON = function () {
 
 Users.beforeSave(async (user) => {
   const {login_token} = user.dataValues
-  console.log(login_token);
   
   const hashedPassword = await bcrypt.hash(login_token, 10);
   user.dataValues.login_token = hashedPassword;
